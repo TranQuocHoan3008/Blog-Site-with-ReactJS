@@ -21,20 +21,19 @@ class Feed extends Component {
     editLoading: false,
   };
 
-  componentDidMount() {
-    fetch("http://localhost:8080/feed/posts")
-      .then((res) => {
-        if (res.status !== 200) {
-          throw new Error("Failed to fetch user status.");
-        }
-        return res.json();
-      })
-      .then((resData) => {
-        this.setState({ status: resData.status });
-      })
-      .catch(this.catchError);
+  async componentDidMount() {
+    try {
+      const res = await fetch("URL");
 
-    this.loadPosts();
+      if (res.status !== 200) {
+        throw new Error("Failed to fetch user status.");
+      }
+      const resData = await res.json();
+
+      this.setState({ status: resData.status });
+    } catch (error) {
+      this.loadPosts();
+    }
   }
 
   loadPosts = async (direction) => {
@@ -51,13 +50,17 @@ class Feed extends Component {
         page--;
         this.setState({ postPage: page });
       }
-      const res = await fetch("http://localhost:8080/feed/posts?page=" + page);
+      const res = await fetch("http://localhost:8080/feed/posts?page=" + page, {
+        headers: {
+          Authorization: "Bearer " + this.props.token,
+        },
+      });
 
       if (res.status !== 200) {
         throw new Error("Failed to fetch posts.");
       }
       const resData = await res.json();
-
+      console.log(resData);
       this.setState({
         posts: resData.posts,
         totalPosts: resData.totalPosts,
@@ -126,6 +129,9 @@ class Feed extends Component {
       const res = await fetch(url, {
         method: method,
         body: formData,
+        headers: {
+          Authorization: "Bearer " + this.props.token,
+        },
       });
       if (res.status !== 200 && res.status !== 201) {
         throw new Error("Creating or editing a post failed!");
@@ -179,7 +185,12 @@ class Feed extends Component {
       this.setState({ postsLoading: true });
       const res = await fetch(
         "http://localhost:8080/feed/post/delete-post/" + postId,
-        { method: "DELETE" }
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + this.props.token,
+          },
+        }
       );
       if (res.status !== 200 && res.status !== 201) {
         throw new Error("Deleting a post failed!");

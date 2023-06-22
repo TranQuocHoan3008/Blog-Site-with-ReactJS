@@ -59,14 +59,11 @@ class App extends Component {
   loginHandler = async (event, authData) => {
     try {
       event.preventDefault();
-      console.log(authData);
-      const password = authData.password;
-      const email = authData.email;
-      console.log(email, password);
       this.setState({ authLoading: true });
       const res = await fetch("http://localhost:8080/auth/login", {
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + this.props.token,
         },
         method: "POST",
         body: JSON.stringify({
@@ -74,7 +71,7 @@ class App extends Component {
           email: authData.email,
         }),
       });
-
+      console.log(res);
       if (res.status === 422) {
         throw new Error("Validation failed.");
       }
@@ -87,12 +84,12 @@ class App extends Component {
       console.log(resData);
       this.setState({
         isAuth: true,
-        token: resData.user.token,
+        token: resData.token,
         authLoading: false,
-        userId: resData.user.userId,
+        userId: resData.userId,
       });
-      localStorage.setItem("token", resData.user.token);
-      localStorage.setItem("userId", resData.user.userId);
+      localStorage.setItem("token", resData.token);
+      localStorage.setItem("userId", resData.userId);
       const remainingMilliseconds = 60 * 60 * 1000;
       const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
       localStorage.setItem("expiryDate", expiryDate.toISOString());
