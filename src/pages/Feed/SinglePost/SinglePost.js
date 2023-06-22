@@ -19,7 +19,6 @@ class SinglePost extends Component {
       throw new Error("Failed to fetch status");
     }
     const resData = await res.json();
-    console.log(resData);
     this.setState({
       title: resData.post.title,
       author: resData.post.creator.name,

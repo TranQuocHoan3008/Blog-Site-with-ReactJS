@@ -57,7 +57,6 @@ class Feed extends Component {
         throw new Error("Failed to fetch posts.");
       }
       const resData = await res.json();
-      console.log(resData);
 
       this.setState({
         posts: resData.posts,
@@ -79,9 +78,7 @@ class Feed extends Component {
         }
         return res.json();
       })
-      .then((resData) => {
-        console.log(resData);
-      })
+      .then((resData) => {})
       .catch(this.catchError);
   };
 
@@ -135,7 +132,6 @@ class Feed extends Component {
       }
 
       const resData = await res.json();
-      console.log(resData);
 
       resData.post.imageUrl = resData.post.imageUrl.replaceAll("//", "/");
 
@@ -165,7 +161,6 @@ class Feed extends Component {
         };
       });
     } catch (error) {
-      console.log(error);
       this.setState({
         isEditing: false,
         editPost: null,
@@ -190,7 +185,6 @@ class Feed extends Component {
         throw new Error("Deleting a post failed!");
       }
       const resData = await res.json();
-      console.log(resData);
       this.setState((prevState) => {
         const updatedPosts = prevState.posts.filter((p) => p._id !== postId);
         return { posts: updatedPosts, postsLoading: false };
