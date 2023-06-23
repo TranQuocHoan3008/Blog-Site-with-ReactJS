@@ -111,15 +111,15 @@ class Feed extends Component {
       });
 
       const formData = new FormData();
-      const creator = { name: "Tran Quoc Hoan" };
+      const creator = "6493f1b9527fc9400acbad80";
       formData.append("title", postData.title);
       formData.append("content", postData.content);
       formData.append("image", postData.image);
-      formData.append("creator", creator.name);
-
+      formData.append("creator", creator);
       // Set up data (with image!)
       let url = "http://localhost:8080/feed/post";
       let method = "POST";
+      console.log(this.state.editPost._id);
       if (this.state.editPost) {
         url =
           "http://localhost:8080/feed/post/edit-post/" +
